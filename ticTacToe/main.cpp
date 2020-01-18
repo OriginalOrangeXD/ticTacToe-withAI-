@@ -13,9 +13,11 @@
 using namespace std;
 
 void printBoard(vector<string> &moves);
-vector<int> getMoves(int count);
+vector<int> getMoves(int count, vector<string> &moves);
 void updatePosition(vector<int> &move, int &count, vector<string> &position);
 bool checkWin(vector<string> &position);
+void aiMove(vector<string> &positions);
+int minimax(vector<string>position);
 
 int main(int argc, const char * argv[]) {
     vector<string> positions;
@@ -28,7 +30,7 @@ int main(int argc, const char * argv[]) {
     while(game)
     {
         printBoard(positions);
-        vector<int> nextMove = getMoves(count);
+        vector<int> nextMove = getMoves(count, positions);
 //        cout << nextMove[0] << endl << nextMove[1] << endl;
         if(nextMove[0] == -1){
             game = false;
@@ -38,6 +40,31 @@ int main(int argc, const char * argv[]) {
         count++;
     }
     return 0;
+}
+
+void aiMove(vector<string> &positions){
+    int bestScore = -1000;
+    vector<int> bestMove;
+    bestMove.push_back(0);
+    bestMove.push_back(0);
+    for(int i = 0; i < 3; i++){
+        for(int x = 0; x < 3; x++){
+            if(positions[i][x] == ' '){
+                positions[i][x] = 'X';
+                int score = minimax(positions);
+                positions[i][x] = ' ';
+                if(score > bestScore){
+                    bestScore = score;
+                    bestMove[0] = i;
+                    bestMove[1] = x;
+                }
+            }
+        }
+    }
+    positions[bestMove[0]][bestMove[1]] = 'X';
+}
+int minimax(vector<string>position){
+    return 1;
 }
 
 bool checkWin(vector<string> &position){
@@ -73,22 +100,23 @@ void updatePosition(vector<int> &move, int &count, vector<string> &position){
     
 }
 
-vector<int> getMoves(int count){
+vector<int> getMoves(int count, vector<string> &moves){
     vector<int> move;
     if(count %2 == 0)
     {
-        int oMoveX;
-        int oMoveY;
-        cout << "Enter your move player O in the format \n'3\n2'" << endl;
-        cin >> oMoveX;
-        cin >> oMoveY;
-        move.push_back(oMoveX);
-        move.push_back(oMoveY);
+//        int oMoveX;
+//        int oMoveY;
+//        cout << "Enter your move player O in the format \n'3\n2'" << endl;
+//        cin >> oMoveX;
+//        cin >> oMoveY;
+//        move.push_back(oMoveX);
+//        move.push_back(oMoveY);
+        aiMove(moves);
 
     }else{
         int xMoveX;
         int xMoveY;
-        cout << "Enter your move player X in the format '3 2'" << endl;
+        cout << "Enter your move player X in the format '3\n2'" << endl;
         cin >> xMoveX;
         cin >> xMoveY;
         move.push_back(xMoveX);
