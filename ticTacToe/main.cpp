@@ -45,8 +45,17 @@ bool checkWin(vector<string> &position){
     if((position[i][0] == position[i][1]) and (position[i][1] == position[i][2]) and (position[i][0] != ' ')){
         cout << endl << position[i][1] << " : Wins the game" << endl;
         return false;
+    }else if((position[0][i] == position[1][i]) and (position[1][i] == position[2][i]) and (position[0][i] != ' ')){
+        cout << endl << position[1][i] << " : Wins the game" << endl;
+        return false;
+    }else if((position[0][0] == position[1][1]) and (position[1][1] == position[2][2]) and (position[0][0] != ' ')){
+        cout << endl << position[1][1] << " : Wins the game" << endl;
+        return false;
+    }else if((position[2][2] == position[1][1]) and (position[1][1] == position[2][0]) and (position[2][0] != ' ')){
+        cout << endl << position[1][1] << " : Wins the game" << endl;
+        return false;
     }
-    }
+        }
     return true;
 }
 
