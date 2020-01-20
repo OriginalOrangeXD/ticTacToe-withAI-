@@ -16,8 +16,8 @@ void printBoard(vector<string> &moves);
 vector<int> getMoves(int count, vector<string> &moves);
 void updatePosition(vector<int> &move, int &count, vector<string> &position);
 bool checkWin(vector<string> &position);
-void aiMove(vector<string> &positions);
-int minimax(vector<string>position);
+vector<int> aiMove(vector<string> positions);
+int minimax(vector<string>position, int depth, bool isMax);
 
 int main(int argc, const char * argv[]) {
     vector<string> positions;
@@ -42,7 +42,7 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
-void aiMove(vector<string> &positions){
+vector<int> aiMove(vector<string> positions){
     int bestScore = -1000;
     vector<int> bestMove;
     bestMove.push_back(0);
@@ -51,7 +51,7 @@ void aiMove(vector<string> &positions){
         for(int x = 0; x < 3; x++){
             if(positions[i][x] == ' '){
                 positions[i][x] = 'X';
-                int score = minimax(positions);
+                int score = minimax(positions, 0, true);
                 positions[i][x] = ' ';
                 if(score > bestScore){
                     bestScore = score;
@@ -61,9 +61,10 @@ void aiMove(vector<string> &positions){
             }
         }
     }
-    positions[bestMove[0]][bestMove[1]] = 'X';
+    return bestMove;
 }
-int minimax(vector<string>position){
+int minimax(vector<string>position, int depth, bool isMax){
+    
     return 1;
 }
 
@@ -111,7 +112,7 @@ vector<int> getMoves(int count, vector<string> &moves){
 //        cin >> oMoveY;
 //        move.push_back(oMoveX);
 //        move.push_back(oMoveY);
-        aiMove(moves);
+        return aiMove(moves);
 
     }else{
         int xMoveX;
