@@ -27,6 +27,7 @@ int main(int argc, const char * argv[]) {
     positions.push_back("   ");
 //    cout << "Hello, World!\n";
     bool game = true;
+    int isWin;
     while(game)
     {
         printBoard(positions);
@@ -36,7 +37,16 @@ int main(int argc, const char * argv[]) {
             game = false;
         }
         updatePosition(nextMove, count, positions);
-        game = checkWin(positions);
+        isWin = checkWin(positions);
+        if(isWin != 0){
+            if(isWin == 1){
+                cout << "X wins" << endl;
+                game = false;
+            }else{
+                cout << "O wins" << endl;
+                game = false;
+            }
+        }
         count++;
     }
     return 0;
@@ -69,22 +79,25 @@ int minimax(vector<string>position, int depth, bool isMax){
 }
 
 bool checkWin(vector<string> &position){
+    char win = ' ';
     for(unsigned int i = 0; i < 3; i++){
     if((position[i][0] == position[i][1]) and (position[i][1] == position[i][2]) and (position[i][0] != ' ')){
-        cout << endl << position[i][1] << " : Wins the game" << endl;
-        return false;
+        win = position[i][0];
     }else if((position[0][i] == position[1][i]) and (position[1][i] == position[2][i]) and (position[0][i] != ' ')){
-        cout << endl << position[1][i] << " : Wins the game" << endl;
-        return false;
+        win = position[i][0];
     }else if((position[0][0] == position[1][1]) and (position[1][1] == position[2][2]) and (position[0][0] != ' ')){
-        cout << endl << position[1][1] << " : Wins the game" << endl;
-        return false;
+        win = position[i][0];
     }else if((position[2][2] == position[1][1]) and (position[1][1] == position[2][0]) and (position[2][0] != ' ')){
-        cout << endl << position[1][1] << " : Wins the game" << endl;
-        return false;
+        win = position[i][0];
     }
         }
-    return true;
+    if(win == 'X'){
+        return 1;
+    }else if(win == 'O'){
+        return -1;
+    }else{
+        return NULL;
+    }
 }
 
 void updatePosition(vector<int> &move, int &count, vector<string> &position){
