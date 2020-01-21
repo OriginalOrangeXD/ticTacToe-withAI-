@@ -15,7 +15,7 @@ using namespace std;
 void printBoard(vector<string> &moves);
 vector<int> getMoves(int count, vector<string> &moves);
 void updatePosition(vector<int> &move, int &count, vector<string> &position);
-bool checkWin(vector<string> &position);
+int checkWin(vector<string> &position);
 vector<int> aiMove(vector<string> positions);
 int minimax(vector<string>position, int depth, bool isMax);
 
@@ -78,8 +78,9 @@ int minimax(vector<string>position, int depth, bool isMax){
     return 1;
 }
 
-bool checkWin(vector<string> &position){
+int checkWin(vector<string> &position){
     char win = ' ';
+    int count = 0;
     for(unsigned int i = 0; i < 3; i++){
     if((position[i][0] == position[i][1]) and (position[i][1] == position[i][2]) and (position[i][0] != ' ')){
         win = position[i][0];
@@ -91,12 +92,21 @@ bool checkWin(vector<string> &position){
         win = position[i][0];
     }
         }
+    for (unsigned int x = 0; x < 3;x++){
+        for (unsigned int y = 0; y < 3;y++){
+            if(position[x][y] != ' '){
+                count++;
+            }
+        }
+    }
     if(win == 'X'){
         return 1;
     }else if(win == 'O'){
         return -1;
+    }else if(count == 9){
+        return 0;
     }else{
-        return NULL;
+        return 4;
     }
 }
 
