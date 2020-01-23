@@ -14,7 +14,7 @@ using namespace std;
 
 void printBoard(vector<string> &moves);
 vector<int> getMoves(int count, vector<string> &moves);
-void updatePosition(vector<int> &move, int &count, vector<string> &position);
+int updatePosition(vector<int> &move, int &count, vector<string> &position);
 int checkWin(vector<string> &position);
 vector<int> aiMove(vector<string> positions);
 int minimax(vector<string>position, int depth, bool isMax);
@@ -39,10 +39,10 @@ int main(int argc, const char * argv[]) {
         updatePosition(nextMove, count, positions);
         isWin = checkWin(positions);
         if(isWin != 0){
-            if(isWin == 1){
+            if(isWin == -1){
                 cout << "X wins" << endl;
                 game = false;
-            }else{
+            }else if(isWin == 1){
                 cout << "O wins" << endl;
                 game = false;
             }
@@ -57,13 +57,17 @@ vector<int> aiMove(vector<string> positions){
     vector<int> bestMove;
     bestMove.push_back(0);
     bestMove.push_back(0);
+    int score;
     for(int i = 0; i < 3; i++){
         for(int x = 0; x < 3; x++){
             if(positions[i][x] == ' '){
-                positions[i][x] = 'X';
-                int score = minimax(positions, 0, true);
+                positions[i][x] = 'O';
+                score = minimax(positions, 0, true);
                 positions[i][x] = ' ';
+//                cout << score << endl;
+//                cout << bestScore << endl;
                 if(score > bestScore){
+//                    cout << "score is bigger than best score " << endl;
                     bestScore = score;
                     bestMove[0] = i;
                     bestMove[1] = x;
@@ -74,8 +78,40 @@ vector<int> aiMove(vector<string> positions){
     return bestMove;
 }
 int minimax(vector<string>position, int depth, bool isMax){
-    
-    return 1;
+    int isWin = checkWin(position);
+    cout << isWin << endl;
+    if(isWin != 4){
+//        cout << "terminal" << endl;
+        return isWin;
+    }else if(isMax){
+        int bestScore = -100;
+        for(unsigned int i = 0; i < 3; i++){
+            for(unsigned int x = 0; x < 3; x++){
+                if(position[i][x] == ' '){
+                    position[i][x] = 'O';
+                    int score = minimax(position, depth+1, false);
+                    position[i][x] = ' ';
+                    bestScore = max(score, bestScore);
+//                    cout << "Checking max" << endl;
+                    }
+                    }
+                }
+            return bestScore;
+        }else{
+            int bestScore = 100;
+            for(unsigned int i = 0; i < 3; i++){
+                for(unsigned int x = 0; x < 3; x++){
+                    if(position[i][x] == ' '){
+                        position[i][x] = 'X';
+                        int score = minimax(position, depth+1, true);
+                        position[i][x] = ' ';
+                        bestScore = min(score, bestScore);
+//                        cout << "Checking min" << endl;
+                        }
+                    }
+                }
+            return bestScore;
+        }
 }
 
 int checkWin(vector<string> &position){
@@ -88,7 +124,7 @@ int checkWin(vector<string> &position){
         win = position[i][0];
     }else if((position[0][0] == position[1][1]) and (position[1][1] == position[2][2]) and (position[0][0] != ' ')){
         win = position[i][0];
-    }else if((position[2][2] == position[1][1]) and (position[1][1] == position[2][0]) and (position[2][0] != ' ')){
+    }else if((position[2][0] == position[1][1]) and (position[1][1] == position[0][2]) and (position[2][0] != ' ')){
         win = position[i][0];
     }
         }
@@ -100,9 +136,9 @@ int checkWin(vector<string> &position){
         }
     }
     if(win == 'X'){
-        return 1;
-    }else if(win == 'O'){
         return -1;
+    }else if(win == 'O'){
+        return 1;
     }else if(count == 9){
         return 0;
     }else{
@@ -110,16 +146,18 @@ int checkWin(vector<string> &position){
     }
 }
 
-void updatePosition(vector<int> &move, int &count, vector<string> &position){
+int updatePosition(vector<int> &move, int &count, vector<string> &position){
     if(position[move[0]][move[1]] == ' '){
     if(count % 2 == 0){
         position[move[0]][move[1]] = 'O';
+        return 1;
     }else{
         position[move[0]][move[1]] = 'X';
+        return 1;
     }
     }else{
-        cout << "SPOT IS TAKEN" <<endl;
         count--;
+        return 0;
     }
     
 }
